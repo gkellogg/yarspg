@@ -15,7 +15,9 @@ module YARSPG
   #   * Node lables are treated like types
   #   * Node properties are treated like statements on that node
   #   * Node string annotations are treated like statements with the predicate created as a document fragment.
-  #
+  #   * Edge labels and Edge ids are ignored.
+  #   * The `graph_name` of each edge is used only for properties and annotations, the edges themselves are in the default graph (per RDF* semantics).
+  #   * Node and Edge schemas are ignored.
 
   class Reader < RDF::Reader
     format Format
@@ -31,6 +33,8 @@ module YARSPG
       NODES:          3,
       EDGES:          4
     }
+
+    PartialStatement = Struct.new(:predicate, :object)
 
     # Terminial definitions
 
@@ -90,7 +94,7 @@ module YARSPG
     production(:string_annotation) do |value|
       pred = base_uri.join("##{value.first[:STRING]}")
       obj = value.last[:STRING]
-      RDF::Statement(nil, pred, obj)
+      PartialStatement.new(pred, obj)
     end
 
     # `[9]   rdf_annotation  ::= ((pn_local pname) | (IRI ":")) (STRING | IRI)`
@@ -99,7 +103,7 @@ module YARSPG
     production(:rdf_annotation) do |value|
       pred = value.first[:_rdf_annotation_1]
       obj = value.last[:_rdf_annotation_2]
-      RDF::Statement(nil, pred, obj)
+      PartialStatement.new(pred, obj)
     end
     # `(seq pn_local pname)`
     production(:_rdf_annotation_3) {|value| value.first[:pn_local].join(value.last[:pname])}
@@ -135,15 +139,15 @@ module YARSPG
       graphs = Array(value[5][:_node_3])
       annotations = Array(value[6][:_node_4])
 
-      # Yield statements
-      types.each do |type|
-        callback.call(:statement, :node, subject, RDF.type, type)
-      end
-      props.each do |statement|
-        callback.call(:statement, :node, subject, statement.predicate, statement.object)
-      end
-      annotations.each do |statement|
-        callback.call(:statement, :node, subject, statement.predicate, statement.object)
+      # Generate statements in named graphs, if present, otherwise, the default graph
+      graphs = [false] if graphs.empty?
+      graphs.each do |graph_name|
+        # Yield statements
+        types.each do |type|
+          callback.call(:statement, :node, subject, RDF.type, type, graph_name)
+        end
+        emit_statements(subject, props, graph_name) {|s, p, o, g| callback.call(:statement, :node, s, p, o, g)}
+        emit_statements(subject, annotations, graph_name) {|s, p, o, g| callback.call(:statement, :node, s, p, o, g)}
       end
 
       nil
@@ -155,7 +159,23 @@ module YARSPG
     # `(seq "," node_label)`
     production(:_node_7) {|value| value.last[:node_label]}
 
-    production(:edge) {|value| value}
+    # `[14]  edge  ::= directed | undirected`
+    #
+    # Ignores `edge_id` and `edge_label`. Treats `node_id` as a document-relative fragment.
+    production(:edge) do |value, data, callback|
+      value[:graphs].each do |graph_name|
+        # Statements in graphs, with inverse statement if :undirected
+        edges = [RDF::Statement(value[:subject], value[:predicate], value[:object])]
+        edges << RDF::Statement(value[:object], value[:predicate], value[:subject]) if value[:undirected]
+
+        edges.each do |edge|
+          # Emit each edge (per RDF*, edges don't have graph names)
+          callback.call(:statement, :edge, edge.subject, edge.predicate, edge.object)
+          emit_statements(edge, value[:props], graph_name) {|s, p, o, g| callback.call(:statement, :edge, s, p, o, g)}
+          emit_statements(edge, value[:annotations], graph_name) {|s, p, o, g| callback.call(:statement, :edge, s, p, o, g)}
+        end
+      end
+    end
 
     # `[15]  section ::= "%" SECTION_NAME`
     production(:section) do |value|
@@ -168,8 +188,30 @@ module YARSPG
       {section: section.to_sym}
     end
 
-    production(:directed) {|value| value}
-    production(:undirected) {|value| value}
+    # `[16]  directed  ::= "(" node_id ")" "-" ("<" edge_id ">")? "{" edge_label "}" props_list? "->" "(" node_id ")" graphs_list? annotations_list?`
+    production(:directed) do |value|
+      {
+        subject: value[1][:node_id],
+        predicate: value[6][:edge_label],
+        object: value[11][:node_id],
+        props: Array(value[8][:_directed_2]),
+        graphs: Array(value[13][:_directed_3] || false),
+        annotations: Array(value[14][ :_directed_4])
+      }
+    end
+
+    # `[17]  undirected  ::= "(" node_id ")" "-" ("<" edge_id ">")? "{" edge_label "}" props_list? "-" "(" node_id ")" graphs_list?` annotations_list?
+    production(:undirected) do |value|
+      {
+        subject: value[1][:node_id],
+        predicate: value[6][:edge_label],
+        object: value[11][:node_id],
+        props: Array(value[8][:_undirected_2]),
+        graphs: Array(value[13][:_undirected_3] || false),
+        annotations: Array(value[14][ :_undirected_4]),
+        undirected: true
+      }
+    end
 
     # `[18]  node_id ::= STRING`
     production(:node_id) {|value| base_uri.join("##{value.first[:STRING]}")}
@@ -182,14 +224,15 @@ module YARSPG
     # Treated as an String annotation.
     production(:prop) do |value|
       pred = base_uri.join("##{value.first[:key]}")
-      obj = RDF::Literal(value.last[:value])
-      RDF::Statement(nil, pred, obj)
+      obj = value.last[:value]
+      PartialStatement.new(pred, obj)
     end
 
-    production(:edge_id) {|value| value}
-    production(:edge_label) {|value| value}
+    # Ignored
+    #production(:edge_id) {|value| value}
+    production(:edge_label) {|value| base_uri.join("##{value.first[:STRING]}")}
     production(:key) {|value| value.first[:STRING].to_s}
-    production(:value) {|value| value}
+    #production(:value) {|value| value}
 
     # `[25]  primitive_value ::= STRING | DATETYPE | NUMBER | BOOL | "null"`
     production(:primitive_value) {|value| value == "null" ? RDF.nil : value}
@@ -314,8 +357,8 @@ module YARSPG
           case context
           when :statement
             loc = data.shift
-            s = RDF::Statement.from(data, lineno:  lineno)
-            add_statement(loc, s) unless !s.valid? && validate?
+            s = RDF::Statement.from(data)
+            add_statement(loc, s)
           end
         end
 
@@ -357,5 +400,18 @@ module YARSPG
                                    (validate? ? statement.valid? : true)
     end
 
+    # Emit statements, accounting for lists
+    def emit_statements(subject, partials, graph_name)
+      partials.each do |partial|
+        if partial.object.list?
+          yield(subject, partial.predicate, partial.object.subject, graph_name)
+          partial.object.each_statement do |st|
+            yield(st.subject, st.predicate, st.object, graph_name)
+          end
+        else
+          yield(subject, partial.predicate, partial.object, graph_name)
+        end
+      end
+    end
   end
 end

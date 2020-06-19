@@ -8,7 +8,7 @@ require 'yarspg'
 begin
   require 'linkeddata'
 rescue LoadError
-  %w(rdf/turtle rdf/vocab rdf/xsd).each do |gem|
+  %w(rdf/turtle rdf/trig rdf/vocab rdf/xsd).each do |gem|
     begin
       require gem
     rescue LoadError => e
@@ -33,9 +33,7 @@ def run(input, **options)
     r = reader_class.new(input, **options[:parser_options])
     r.each do |statement|
       num += 1
-      if options[:errors] && statement.invalid?
-        $stderr.puts "Invalid statement at #{r.lineno}: #{statement.inspect}"
-      elsif options[:benchmark]
+      if options[:benchmark]
         # Don't do anything
       elsif options[:quiet]
         print "." if options[:quiet] == 1
@@ -94,29 +92,42 @@ options = {
 }
 input = nil
 
-opts = GetoptLong.new(
-  ["--debug", GetoptLong::NO_ARGUMENT],
-  ["--base", GetoptLong::REQUIRED_ARGUMENT],
-  ["--benchmark", GetoptLong::NO_ARGUMENT],
-  ["--errors", GetoptLong::NO_ARGUMENT],
-  ["--execute", "-e", GetoptLong::REQUIRED_ARGUMENT],
-  ["--canonicalize", GetoptLong::NO_ARGUMENT],
-  ["--format", GetoptLong::REQUIRED_ARGUMENT],
-  ["--input-format", GetoptLong::REQUIRED_ARGUMENT],
-  ["--output", "-o", GetoptLong::REQUIRED_ARGUMENT],
-  ["--profile", GetoptLong::NO_ARGUMENT],
-  ["--progress", GetoptLong::NO_ARGUMENT],
-  ["--quiet", GetoptLong::NO_ARGUMENT],
-  ["--validate", GetoptLong::NO_ARGUMENT],
-  ["--verbose", GetoptLong::NO_ARGUMENT]
-)
+OPT_ARGS = [
+  ["--debug",           GetoptLong::NO_ARGUMENT,       "Turn on debugging output"],
+  ["--base",            GetoptLong::REQUIRED_ARGUMENT, "Base URI to use for document"],
+  ["--benchmark",       GetoptLong::NO_ARGUMENT,       "Parse only, no output"],
+  ["--execute", "-e",   GetoptLong::REQUIRED_ARGUMENT,"Use option argument as the patch input"],
+  ["--format", "-f",    GetoptLong::REQUIRED_ARGUMENT,"Specify output format one of ebnf, html, ttl, sxp, or rb"],
+  ["--input-format",    GetoptLong::REQUIRED_ARGUMENT,"Specify input format one of ebnf or sxp"],
+  ["--output", "-o",    GetoptLong::REQUIRED_ARGUMENT,"Output to the specified file path"],
+  ["--profile",         GetoptLong::NO_ARGUMENT,      "Run profiler with output to doc/profiles/"],
+  ["--progress", "-v",  GetoptLong::NO_ARGUMENT,      "Detail on execution"],
+  ["--quiet",           GetoptLong::NO_ARGUMENT,      "Reduce output"],
+  ["--validate",        GetoptLong::NO_ARGUMENT,      "Validate input"],
+  ["--help", "-?",      GetoptLong::NO_ARGUMENT,      "This message"]
+]
+def usage
+  STDERR.puts %{#{$0} Version #{EBNF::VERSION}}
+  STDERR.puts %{Usage: #{$0} [options] file ...}
+  width = OPT_ARGS.map do |o|
+    l = o.first.length
+    l += o[1].length + 2 if o[1].is_a?(String)
+    l
+  end.max
+  OPT_ARGS.each do |o|
+    s = "  %-*s  " % [width, (o[1].is_a?(String) ? "#{o[0,2].join(', ')}" : o[0])]
+    s += o.last
+    STDERR.puts s
+  end
+  exit(1)
+end
+
+opts = GetoptLong.new(*OPT_ARGS.map {|o| o[0..-2]})
 opts.each do |opt, arg|
   case opt
   when '--debug'        then logger.level = Logger::DEBUG
   when '--base'         then parser_options[:base_uri] = writer_options[:base_uri] = arg
   when '--benchmark'    then options[:benchmark] = true
-  when '--canonicalize' then parser_options[:canonicalize] = true
-  when '--errors'       then options[:errors] = true
   when '--execute'      then input = arg
   when '--format'       then options[:output_format] = arg.to_sym
   when '--input-format' then options[:input_format] = arg.to_sym
@@ -128,7 +139,7 @@ opts.each do |opt, arg|
     logger.level = Logger::FATAL
   when '--stream'       then writer_options[:stream] = true
   when '--validate'     then parser_options[:validate] = true
-  when '--verbose'      then $verbose = true
+  when '--help'         then usage
   end
 end
 

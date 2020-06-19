@@ -1,0 +1,33 @@
+# Note, due to limitations of YARS-PG, this will not be equivalent to the Turtle version.
+
+# Prefix declaration
+::     <https://rubygems.org/gems/yarspg>
+:dc:   <http://purl.org/dc/terms/>
+:doap: <http://usefulinc.com/ns/doap#>
+:earl: <http://www.w3.org/ns/earl#>
+:foaf: <http://xmlns.com/foaf/0.1/>
+
+%METADATA
+-doap:name:           "YARSPG"
+-doap:homepage:       <https://gkellogg.github.com/yarspg>
+-doap:license:        <https://unlicense.org/1.0/>
+-doap:shortdesc:      "YARS-PG reader/writer for Ruby."
+-doap:description:    "YARSPG is an YARS-PG reader/writer for the RDF.rb library suite."
+-doap:created:        "2020-06-19"
+-doap:programming-language: "Ruby"
+-doap:implements:     <https://lszeremeta.github.io/yarspg/>
+-doap:category:       <http://dbpedia.org/resource/Resource_Description_Framework>
+-doap:category:       <http://dbpedia.org/resource/Ruby_(programming_language)>
+-doap:download-page:  <>
+-doap:mailing-list:   <https://lists.w3.org/Archives/Public/public-rdf-ruby/>
+-doap:bug-database:   <https://github.com/gkellogg/yarspg/issues>
+-doap:blog:           <https://greggkellogg.net/>
+-doap:developer:      <https://greggkellogg.net/foaf#me>
+-doap:maintainer:     <https://greggkellogg.net/foaf#me>
+-doap:documenter:     <https://greggkellogg.net/foaf#me>
+-foaf:maker:          <https://greggkellogg.net/foaf#me>
+-dc:title:            "YARSPG"
+-dc:description:      "RDF::Turtle is an Turtle reader/writer for the RDF.rb library suite."
+-dc:date:             "2020-06-19"
+-dc:creator:          <https://greggkellogg.net/foaf#me>
+-dc:isPartOf:         <https://rubygems.org/gems/rdf>

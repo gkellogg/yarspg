@@ -48,15 +48,19 @@ module YARSPG
 
     terminal(:BOOL,          BOOL) {|value| RDF::Literal::Boolean.new(value)}
     terminal(:ALNUM_PLUS,    ALNUM_PLUS)
-    terminal(:IRI,           IRI) { |value| RDF::URI(value[1..-2])}
+    terminal(:IRI,           IRI) { |value| base_uri.join(value[1..-2])}
     terminal(:DATE,          DATE) {|value| RDF::Literal::Date.new(value)}
     terminal(:TIME,          TIME) {|value| RDF::Literal::Time.new(value)}
     terminal(:TIMESTAMP,     TIMESTAMP) {|value| RDF::Literal::DateTime.new(value)}
 
-    # `[3]   prefix_directive  ::= pname IRI`
-    production(:prefix_directive) do |value|
-      pfx = value.first[:pname].to_sym
-      prefixes[pfx] = value.last[:IRI]
+    # `[3]   prefix_directive  ::= ('::' | pname) IRI`
+    production(:prefix_directive) do |value, data, callback|
+      if value.first[:_prefix_directive_1] == '::'
+        callback.call(:base_uri, value.last[:IRI])
+      else
+        pfx = value.first[:_prefix_directive_1].to_sym
+        prefixes[pfx] = value.last[:IRI]
+      end
     end
 
     # `[4]   pname ::= ":" ALNUM_PLUS ":"`
@@ -327,6 +331,7 @@ module YARSPG
     def initialize(input = nil, **options, &block)
       super do
         @options[:base_uri] = RDF::URI(base_uri || "")
+        @options[:logger] = false unless @options.has_key?(:logger)
         log_debug("base IRI") {base_uri.inspect}
 
         if block_given?
@@ -353,13 +358,18 @@ module YARSPG
         log_recover
         @callback = block
 
-        parse(@input, :yarspg, YARSPG::Meta::RULES, **@options) do |context, *data|
-          case context
-          when :statement
-            loc = data.shift
-            s = RDF::Statement.from(data)
-            add_statement(loc, s)
+        begin
+          parse(@input, :yarspg, YARSPG::Meta::RULES, **@options) do |context, *data|
+            case context
+            when :base_uri
+              @options[:base_uri] = data.first
+            when :statement
+              loc = data.shift
+              @callback.call(RDF::Statement.from(data))
+            end
           end
+        rescue EBNF::PEG::Parser::Error
+          # Terminate loop if Errors found while parsing
         end
 
         if validate? && log_statistics[:error]
@@ -384,20 +394,6 @@ module YARSPG
         end
       end
       enum_for(:each_triple)
-    end
-
-    # add a statement, object can be literal or URI or bnode
-    #
-    # @param [Symbol] production
-    # @param [RDF::Statement] statement the subject of the statement
-    # @return [RDF::Statement] Added statement
-    # @raise [RDF::ReaderError] Checks parameter types and raises if they are incorrect if parsing mode is _validate_.
-    def add_statement(production, statement)
-      error("Statement is invalid: #{statement.inspect.inspect}", production: produciton) if validate? && statement.invalid?
-      @callback.call(statement) if statement.subject &&
-                                   statement.predicate &&
-                                   statement.object &&
-                                   (validate? ? statement.valid? : true)
     end
 
     # Emit statements, accounting for lists

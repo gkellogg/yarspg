@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.platform           = Gem::Platform::RUBY
   gem.files              = %w(README.md UNLICENSE VERSION bin/yarspg) + Dir.glob('lib/**/*.rb')
   gem.require_paths      = %w(lib)
-  gem.description        = %(Reads and writes RDF* datasets to the YARS-PG format.)
+  gem.description        = %(YARSPG is an YARS-PG reader/writer for the RDF.rb library suite.)
 
   gem.required_ruby_version      = '>= 2.4'
   gem.requirements               = []

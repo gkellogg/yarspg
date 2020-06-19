@@ -2,9 +2,10 @@
 # Derived from etc/yars-pg.ebnf
 module YARSPG::Meta
   RULES = [
-    EBNF::Rule.new(:yarspg, "1", [:plus, :statement]).extend(EBNF::PEG::Rule),
+    EBNF::Rule.new(:yarspg, "1", [:star, :statement]).extend(EBNF::PEG::Rule),
     EBNF::Rule.new(:statement, "2", [:alt, :node, :edge, :prefix_directive, :metadata, :node_schema, :edge_schema, :section]).extend(EBNF::PEG::Rule),
-    EBNF::Rule.new(:prefix_directive, "3", [:seq, :pname, :IRI]).extend(EBNF::PEG::Rule),
+    EBNF::Rule.new(:prefix_directive, "3", [:seq, :_prefix_directive_1, :IRI]).extend(EBNF::PEG::Rule),
+    EBNF::Rule.new(:_prefix_directive_1, "3.1", [:alt, "::", :pname]).extend(EBNF::PEG::Rule),
     EBNF::Rule.new(:pname, "4", [:seq, ":", :ALNUM_PLUS, ":"]).extend(EBNF::PEG::Rule),
     EBNF::Rule.new(:pn_local, "5", [:seq, :ALNUM_PLUS]).extend(EBNF::PEG::Rule),
     EBNF::Rule.new(:metadata, "6", [:seq, "-", :_metadata_1, :_metadata_2]).extend(EBNF::PEG::Rule),

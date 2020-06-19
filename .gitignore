@@ -1,0 +1,9 @@
+/.yardoc/
+/doc/
+/pkg/
+/.rbx/
+/*.gem
+Gemfile.lock
+/.bundle/
+/coverage/
+/.byebug_history

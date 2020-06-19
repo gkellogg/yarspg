@@ -1,0 +1,125 @@
+(
+ (rule yarspg "1" (plus statement))
+ (rule statement "2"
+  (alt node edge prefix_directive metadata node_schema edge_schema section))
+ (rule prefix_directive "3" (seq pname IRI))
+ (rule pname "4" (seq ":" ALNUM_PLUS ":"))
+ (rule pn_local "5" (seq ALNUM_PLUS))
+ (rule metadata "6" (seq "-" (alt (seq pn_local pname) (seq IRI ":")) (alt STRING IRI)))
+ (rule graph_name "6a" (seq STRING))
+ (rule annotation "7" (alt string_annotation rdf_annotation))
+ (rule string_annotation "8" (seq STRING ":" STRING))
+ (rule rdf_annotation "9" (seq (alt (seq pn_local pname) (seq IRI ":")) (alt STRING IRI)))
+ (rule annotations_list "10" (seq "+" annotation (star (seq "," annotation))))
+ (rule props_list "11" (seq "[" prop (star (seq "," prop)) "]"))
+ (rule graphs_list "12" (seq "/" graph_name (star (seq "," graph_name)) "/"))
+ (rule node "13"
+  (seq "<" node_id ">"
+   (opt (seq "{" node_label (star (seq "," node_label)) "}"))
+   (opt props_list)
+   (opt graphs_list)
+   (opt annotations_list)) )
+ (rule edge "14" (alt directed undirected))
+ (rule section "15" (seq "%" SECTION_NAME))
+ (rule directed "16"
+  (seq "(" node_id ")" "-"
+   (opt (seq "<" edge_id ">")) "{" edge_label "}"
+   (opt props_list) "->" "(" node_id ")"
+   (opt graphs_list)
+   (opt annotations_list)) )
+ (rule undirected "17"
+  (seq "(" node_id ")" "-"
+   (opt (seq "<" edge_id ">")) "{" edge_label "}"
+   (opt props_list) "-" "(" node_id ")"
+   (opt graphs_list)
+   (opt annotations_list)) )
+ (rule node_id "18" (seq STRING))
+ (rule node_label "19" (seq STRING))
+ (rule prop "20" (seq key ":" value))
+ (rule edge_id "21" (seq STRING))
+ (rule edge_label "22" (seq STRING))
+ (rule key "23" (seq STRING))
+ (rule value "24" (alt primitive_value complex_value))
+ (rule primitive_value "25" (alt STRING DATETYPE NUMBER BOOL "null"))
+ (rule complex_value "26" (alt set list struct))
+ (rule set "27"
+  (seq "{" (alt primitive_value set) (star (seq "," (alt primitive_value set))) "}"))
+ (rule list "28"
+  (seq "[" (alt primitive_value list) (star (seq "," (alt primitive_value list))) "]"))
+ (rule struct "29"
+  (seq "{" key ":"
+   (alt primitive_value struct)
+   (star (seq "," key ":" (alt primitive_value struct))) "}" ))
+ (rule node_schema "30"
+  (seq "S"
+   (seq "{" node_label (star (seq "," node_label)) "}")
+   (opt props_list_schema)
+   (opt graphs_list)
+   (opt annotations_list)) )
+ (rule props_list_schema "31" (seq "[" prop_schema (star (seq "," prop_schema)) "]"))
+ (rule prop_schema "32" (seq key ":" value_schema))
+ (rule value_schema "33" (alt primitive_value_schema complex_value_schema))
+ (rule primitive_value_schema "34"
+  (alt "Decimal" "SmallInt" "Integer" "BigInt" "Float" "Real" "Double" "Bool"
+   "Null" "String" "Date" "Timestamp" "Time" ))
+ (rule complex_value_schema "35" (alt set_schema list_schema struct_schema))
+ (rule set_schema "36" (seq "Set" "(" (alt primitive_value_schema set_schema) ")"))
+ (rule list_schema "37" (seq "List" "(" (alt primitive_value_schema list_schema) ")"))
+ (rule struct_schema "38"
+  (seq "Struct" "(" (alt primitive_value_schema struct_schema) ")"))
+ (rule edge_schema "39" (alt directed_schema undirected_schema))
+ (rule directed_schema "40"
+  (seq "S"
+   (opt (seq "(" node_label ")")) "-" "{" edge_label "}"
+   (opt props_list_schema) "->"
+   (opt (seq "(" node_label ")"))) )
+ (rule undirected_schema "41"
+  (seq "S"
+   (opt (seq "(" node_label ")")) "-" "{" edge_label "}"
+   (opt props_list_schema) "-"
+   (opt (seq "(" node_label ")"))) )
+ (terminal SECTION_NAME "42"
+  (alt "METADATA" "NODE SCHEMAS" "EDGE SCHEMAS" "NODES" "EDGES"))
+ (terminal COMMENT "43" (seq "#" (star (range "^#xd#xa#xc"))))
+ (terminal STRING "44" (seq STRING_LITERAL_QUOTE))
+ (terminal NUMBER "45" (seq (opt SIGN) (plus (range "0-9")) (opt ".") (star (range "0-9"))))
+ (terminal BOOL "46" (alt "true" "false"))
+ (terminal STRING_LITERAL_QUOTE "47"
+  (seq "\"" (star (alt (range "^\"#xd#xa") "'" "\"")) "\""))
+ (terminal ALNUM_PLUS "48"
+  (seq PN_CHARS_BASE (opt (seq (star (alt PN_CHARS ".")) PN_CHARS))))
+ (terminal IRI "49"
+  (seq "<" (star (alt PN_CHARS "." ":" "/" "\\" "#" "@" "%" "&" UCHAR)) ">"))
+ (terminal PN_CHARS "50" (alt PN_CHARS_U (range "-0-9#xB7#x0300-#x036F#x203F-#x2040")))
+ (terminal PN_CHARS_U "51" (alt PN_CHARS_BASE "_"))
+ (terminal DATETYPE "52" (alt TIMESTAMP DATE TIME))
+ (terminal DATE "53"
+  (seq
+   (range "0-9")
+   (range "0-9")
+   (range "0-9")
+   (range "0-9") "-"
+   (range "0-9")
+   (range "0-9") "-"
+   (range "0-9")
+   (range "0-9")) )
+ (terminal TIME "54"
+  (seq
+   (range "0-9")
+   (range "0-9") ":"
+   (range "0-9")
+   (range "0-9") ":"
+   (range "0-9")
+   (range "0-9")
+   (opt TIMEZONE)) )
+ (terminal TIMEZONE "55"
+  (seq (opt SIGN) (range "0-9") (range "0-9") ":" (range "0-9") (range "0-9")))
+ (terminal TIMESTAMP "56" (seq DATE "T" TIME))
+ (terminal SIGN "57" (alt "+" "-"))
+ (terminal UCHAR "58" (seq (alt "u" (seq "U" HEX HEX HEX HEX)) HEX HEX HEX HEX))
+ (terminal PN_CHARS_BASE "59"
+  (range
+   "A-Za-z0-9#xC0-#xD6#xD8-#xF6#xF8-#x2FF#x370-#x37D#x37F-#x1FFF#x200C-#x200D#x2070-#x218F#x2C00-#x2FEF#x3001-#xD7FF#xF900-#xFDCF#xFDF0-#xFFFD"
+  ))
+ (terminal HEX "60" (range "0-9A-Fa-f"))
+ (terminal WS "61" (plus (alt (range "#x20#x9#xa") COMMENT))))

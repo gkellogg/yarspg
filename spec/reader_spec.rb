@@ -240,7 +240,7 @@ describe YARSPG::Reader do
     end
   end
 
-  describe "notes" do
+  describe "nodes" do
   end
 
   describe "edges" do

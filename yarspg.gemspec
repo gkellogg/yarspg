@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.authors            = ['Gregg Kellogg']
   gem.email              = 'gregg@greggkellogg.net'
   gem.platform           = Gem::Platform::RUBY
-  gem.files              = %w(README.md UNLICENSE VERSION bin/yarspg) + Dir.glob('lib/**/*.rb')
+  gem.files              = %w(README.md UNLICENSE VERSION) + Dir.glob('lib/**/*.rb')
   gem.require_paths      = %w(lib)
   gem.description        = %(YARSPG is an YARS-PG reader/writer for the RDF.rb library suite.)
 

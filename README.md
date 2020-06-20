@@ -5,7 +5,6 @@
 [![Gem Version](https://badge.fury.io/rb/yarspg.png)](https://badge.fury.io/rb/yarspg)
 [![Build Status](https://secure.travis-ci.org/gkellogg/yarspg.png?branch=master)](https://travis-ci.org/gkellogg/yarspg)
 [![Coverage Status](https://coveralls.io/repos/gkellogg/yarspg/badge.svg)](https://coveralls.io/r/gkellogg/yarspg)
-[![Dependency Status](https://gemnasium.com/gkellogg/yarspg.png)](https://gemnasium.com/gkellogg/yarspg)
 
 ## Features
 

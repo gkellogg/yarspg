@@ -1,8 +1,9 @@
 (
- (rule yarspg "1" (plus statement))
+ (rule yarspg "1" (star statement))
  (rule statement "2"
   (alt node edge prefix_directive metadata node_schema edge_schema section))
- (rule prefix_directive "3" (seq pname IRI))
+ (rule prefix_directive "3" (seq _prefix_directive_1 IRI))
+ (rule _prefix_directive_1 "3.1" (alt "::" pname))
  (rule pname "4" (seq ":" ALNUM_PLUS ":"))
  (rule pn_local "5" (seq ALNUM_PLUS))
  (rule metadata "6" (seq "-" _metadata_1 _metadata_2))

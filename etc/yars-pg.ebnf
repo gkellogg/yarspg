@@ -1,6 +1,6 @@
-[1]   yarspg  ::= statement+
+[1]   yarspg  ::= statement*
 [2]   statement ::= node | edge | prefix_directive | metadata | node_schema | edge_schema | section
-[3]   prefix_directive  ::= pname IRI
+[3]   prefix_directive  ::= ('::' | pname) IRI
 [4]   pname ::= ":" ALNUM_PLUS ":"
 [5]   pn_local  ::= ALNUM_PLUS
 [6]   metadata  ::= "-" ((pn_local pname) | (IRI ":")) (STRING | IRI)

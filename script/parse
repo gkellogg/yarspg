@@ -1,0 +1,154 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+$:.unshift(File.expand_path("../../lib", __FILE__))
+require "bundler/setup"
+require 'logger'
+require 'rdf'
+require 'yarspg'
+begin
+  require 'linkeddata'
+rescue LoadError
+  %w(rdf/turtle rdf/trig rdf/vocab rdf/xsd).each do |gem|
+    begin
+      require gem
+    rescue LoadError => e
+    end
+  end
+end
+require 'rdf/ntriples'
+require 'getoptlong'
+
+def run(input, **options)
+  if options[:profile]
+    require 'profiler'
+  end
+
+  reader_class = RDF::Reader.for(options[:input_format].to_sym)
+  raise "Reader not found for #{options[:input_format]}" unless reader_class
+
+  start = Time.new
+  num = 0
+  Profiler__::start_profile if options[:profile]
+  if options[:output_format] == :ntriples || options[:quiet] || options[:benchmark]
+    r = reader_class.new(input, **options[:parser_options])
+    r.each do |statement|
+      num += 1
+      if options[:benchmark]
+        # Don't do anything
+      elsif options[:quiet]
+        print "." if options[:quiet] == 1
+      else
+       options[:output].puts statement.to_ntriples
+      end
+    end
+  elsif options[:output_format] == :inspect
+    reader_class.new(input, **options[:parser_options]).each do |statement|
+      num += 1
+      options[:output].puts statement.inspect
+    end
+  else
+    r = reader_class.new(input, **options[:parser_options])
+    g = RDF::Graph.new << r
+    num = g.count
+    options[:output].puts g.dump(options[:output_format], prefixes:  r.prefixes, **options[:writer_options])
+  end
+  if options[:profile]
+    Profiler__::stop_profile
+    Profiler__::print_profile($stderr)
+  end
+  puts
+  secs = Time.new - start
+  puts "Parsed #{num} statements in #{secs} seconds @ #{num/secs} statements/second."
+rescue Exception => e
+  fname = input.respond_to?(:path) ? input.path : "-stdin-"
+  STDERR.puts("Error in #{fname}: #{e.message}")
+  STDERR.puts "Backtrace: " + e.backtrace.join("\n  ")
+  raise e
+end
+
+logger = Logger.new(STDERR)
+logger.level = Logger::WARN
+logger.formatter = lambda {|severity, datetime, progname, msg| "#{severity}: #{msg}\n"}
+
+parser_options = {
+  base_uri:  nil,
+  validate:  false,
+  logger:   logger,
+  rdfstar:  :SA
+}
+
+writer_options = {
+  base_uri:  nil,
+  standard_prefixes:  true,
+  logger: logger,
+}
+
+options = {
+  parser_options:  parser_options,
+  writer_options:  writer_options,
+  output:  STDOUT,
+  output_format:  :ttl,
+  input_format:  :yarspg,
+}
+input = nil
+
+OPT_ARGS = [
+  ["--debug",           GetoptLong::NO_ARGUMENT,       "Turn on debugging output"],
+  ["--base",            GetoptLong::REQUIRED_ARGUMENT, "Base URI to use for document"],
+  ["--benchmark",       GetoptLong::NO_ARGUMENT,       "Parse only, no output"],
+  ["--execute", "-e",   GetoptLong::REQUIRED_ARGUMENT,"Use option argument as the patch input"],
+  ["--format", "-f",    GetoptLong::REQUIRED_ARGUMENT,"Specify output format one of ebnf, html, ttl, sxp, or rb"],
+  ["--input-format",    GetoptLong::REQUIRED_ARGUMENT,"Specify input format one of ebnf or sxp"],
+  ["--output", "-o",    GetoptLong::REQUIRED_ARGUMENT,"Output to the specified file path"],
+  ["--profile",         GetoptLong::NO_ARGUMENT,      "Run profiler with output to doc/profiles/"],
+  ["--progress", "-v",  GetoptLong::NO_ARGUMENT,      "Detail on execution"],
+  ["--quiet",           GetoptLong::NO_ARGUMENT,      "Reduce output"],
+  ["--validate",        GetoptLong::NO_ARGUMENT,      "Validate input"],
+  ["--help", "-?",      GetoptLong::NO_ARGUMENT,      "This message"]
+]
+def usage
+  STDERR.puts %{#{$0} Version #{EBNF::VERSION}}
+  STDERR.puts %{Usage: #{$0} [options] file ...}
+  width = OPT_ARGS.map do |o|
+    l = o.first.length
+    l += o[1].length + 2 if o[1].is_a?(String)
+    l
+  end.max
+  OPT_ARGS.each do |o|
+    s = "  %-*s  " % [width, (o[1].is_a?(String) ? "#{o[0,2].join(', ')}" : o[0])]
+    s += o.last
+    STDERR.puts s
+  end
+  exit(1)
+end
+
+opts = GetoptLong.new(*OPT_ARGS.map {|o| o[0..-2]})
+opts.each do |opt, arg|
+  case opt
+  when '--debug'        then logger.level = Logger::DEBUG
+  when '--base'         then parser_options[:base_uri] = writer_options[:base_uri] = arg
+  when '--benchmark'    then options[:benchmark] = true
+  when '--execute'      then input = arg
+  when '--format'       then options[:output_format] = arg.to_sym
+  when '--input-format' then options[:input_format] = arg.to_sym
+  when '--output'       then options[:output] = File.open(arg, "w")
+  when '--profile'      then options[:profile] = true
+  when '--progress'     then logger.level = Logger::INFO
+  when '--quiet'
+    options[:quiet] = options[:quiet].to_i + 1
+    logger.level = Logger::FATAL
+  when '--stream'       then writer_options[:stream] = true
+  when '--validate'     then parser_options[:validate] = true
+  when '--help'         then usage
+  end
+end
+
+if ARGV.empty?
+  s = input ? input : $stdin.read
+  run(StringIO.new(s), **options)
+else
+  ARGV.each do |test_file|
+    run(Kernel.open(test_file), **options)
+  end
+end
+puts

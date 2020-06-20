@@ -5,7 +5,7 @@
 <td><code>yarspg</code></td>
 <td>::=</td>
 <td>
-statement+
+statement*
 </td>
 </tr>
 <tr id='grammar-production-statement'>
@@ -27,7 +27,7 @@ node
 <td><code>prefix_directive</code></td>
 <td>::=</td>
 <td>
-pname IRI
+("::" | pname) IRI
 </td>
 </tr>
 <tr id='grammar-production-pname'>

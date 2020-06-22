@@ -343,7 +343,7 @@ primitive_value_schema | complex_value_schema
 | "Null"
 | "String"
 | "Date"
-| "Timestamp"
+| "DateTime"
 | "Time"
 </td>
 </tr>
@@ -519,7 +519,7 @@ PN_CHARS_BASE | "_"
 <td><code>DATETYPE</code></td>
 <td>::=</td>
 <td>
-TIMESTAMP | DATE | TIME
+DATETIME | DATE | TIME
 </td>
 </tr>
 <tr id='grammar-production-DATE'>
@@ -563,9 +563,9 @@ TIMEZONE?
 SIGN? [0-9] [0-9] ":" [0-9] [0-9]
 </td>
 </tr>
-<tr id='grammar-production-TIMESTAMP'>
+<tr id='grammar-production-DATETIME'>
 <td>[56]</td>
-<td><code>TIMESTAMP</code></td>
+<td><code>DATETIME</code></td>
 <td>::=</td>
 <td>
 DATE "T" TIME

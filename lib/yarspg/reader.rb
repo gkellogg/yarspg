@@ -51,7 +51,7 @@ module YARSPG
     terminal(:IRI,           IRI) { |value| base_uri.join(value[1..-2])}
     terminal(:DATE,          DATE) {|value| RDF::Literal::Date.new(value)}
     terminal(:TIME,          TIME) {|value| RDF::Literal::Time.new(value)}
-    terminal(:TIMESTAMP,     TIMESTAMP) {|value| RDF::Literal::DateTime.new(value)}
+    terminal(:DATETIME,     DATETIME) {|value| RDF::Literal::DateTime.new(value)}
 
     # `[3]   prefix_directive  ::= ('::' | pname) IRI`
     production(:prefix_directive) do |value, data, callback|

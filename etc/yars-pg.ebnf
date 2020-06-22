@@ -32,7 +32,7 @@
 [31]  props_list_schema ::= "[" prop_schema ("," prop_schema)* "]"
 [32]  prop_schema ::= key ":" value_schema
 [33]  value_schema  ::= primitive_value_schema | complex_value_schema
-[34]  primitive_value_schema  ::= "Decimal" | "SmallInt" | "Integer" | "BigInt" | "Float" | "Real" | "Double" | "Bool" | "Null" | "String" | "Date" | "Timestamp" | "Time"
+[34]  primitive_value_schema  ::= "Decimal" | "SmallInt" | "Integer" | "BigInt" | "Float" | "Real" | "Double" | "Bool" | "Null" | "String" | "Date" | "DateTime" | "Time"
 [35]  complex_value_schema  ::= set_schema | list_schema | struct_schema
 [36]  set_schema  ::= "Set" "(" (primitive_value_schema | set_schema) ")"
 [37]  list_schema ::= "List" "(" (primitive_value_schema | list_schema) ")"
@@ -50,11 +50,11 @@
 [49]  IRI ::= "<" (PN_CHARS | "." | ":" | "/" | "\" | "#" | "@" | "%" | "&" | UCHAR)* ">"
 [50]  PN_CHARS  ::= PN_CHARS_U | [-0-9#xB7#x0300-#x036F#x203F-#x2040]
 [51]  PN_CHARS_U  ::= PN_CHARS_BASE | "_"
-[52]  DATETYPE  ::= TIMESTAMP | DATE | TIME
+[52]  DATETYPE  ::= DATETIME | DATE | TIME
 [53]  DATE  ::= [0-9] [0-9] [0-9] [0-9] "-" [0-9] [0-9] "-" [0-9] [0-9]
 [54]  TIME  ::= [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] TIMEZONE?
 [55]  TIMEZONE  ::= SIGN? [0-9] [0-9] ":" [0-9] [0-9]
-[56]  TIMESTAMP ::= DATE "T" TIME
+[56]  DATETIME ::= DATE "T" TIME
 [57]  SIGN  ::= "+" | "-"
 [58]  UCHAR ::= ("u" | "U" HEX HEX HEX HEX) HEX HEX HEX HEX
 [59]  PN_CHARS_BASE ::= [A-Za-z0-9#xC0-#xD6#xD8-#xF6#xF8-#x2FF#x370-#x37D#x37F-#x1FFF#x200C-#x200D#x2070-#x218F#x2C00-#x2FEF#x3001-#xD7FF#xF900-#xFDCF#xFDF0-#xFFFD]

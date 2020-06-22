@@ -24,7 +24,7 @@ module YARSPG::Terminals
   DATE                 = %r(\d\d\d\d-\d\d-\d\d)u.freeze
   TIMEZONE             = %r((?:#{SIGN})?\d\d:\d\d)u.freeze
   TIME                 = %r(\d\d:\d\d:\d\d(?:#{TIMEZONE})?)u.freeze
-  TIMESTAMP            = %r((?:#{DATE})T(?:#{TIME}))u.freeze
+  DATETIME            = %r((?:#{DATE})T(?:#{TIME}))u.freeze
   HEX                  = %r(\#x[0-9a-fA-F]+)u.freeze
   COMMENT              = /(?:#[^\n\r\r]*)/u.freeze
   WS                   = /(?:\s|(?:#{COMMENT}))+/m.freeze

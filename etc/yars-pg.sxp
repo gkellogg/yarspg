@@ -61,7 +61,7 @@
  (rule value_schema "33" (alt primitive_value_schema complex_value_schema))
  (rule primitive_value_schema "34"
   (alt "Decimal" "SmallInt" "Integer" "BigInt" "Float" "Real" "Double" "Bool"
-   "Null" "String" "Date" "Timestamp" "Time" ))
+   "Null" "String" "Date" "DateTime" "Time" ))
  (rule complex_value_schema "35" (alt set_schema list_schema struct_schema))
  (rule set_schema "36" (seq "Set" "(" (alt primitive_value_schema set_schema) ")"))
  (rule list_schema "37" (seq "List" "(" (alt primitive_value_schema list_schema) ")"))
@@ -92,7 +92,7 @@
   (seq "<" (star (alt PN_CHARS "." ":" "/" "\\" "#" "@" "%" "&" UCHAR)) ">"))
  (terminal PN_CHARS "50" (alt PN_CHARS_U (range "-0-9#xB7#x0300-#x036F#x203F-#x2040")))
  (terminal PN_CHARS_U "51" (alt PN_CHARS_BASE "_"))
- (terminal DATETYPE "52" (alt TIMESTAMP DATE TIME))
+ (terminal DATETYPE "52" (alt DATETIME DATE TIME))
  (terminal DATE "53"
   (seq
    (range "0-9")
@@ -114,7 +114,7 @@
    (opt TIMEZONE)) )
  (terminal TIMEZONE "55"
   (seq (opt SIGN) (range "0-9") (range "0-9") ":" (range "0-9") (range "0-9")))
- (terminal TIMESTAMP "56" (seq DATE "T" TIME))
+ (terminal DATETIME "56" (seq DATE "T" TIME))
  (terminal SIGN "57" (alt "+" "-"))
  (terminal UCHAR "58" (seq (alt "u" (seq "U" HEX HEX HEX HEX)) HEX HEX HEX HEX))
  (terminal PN_CHARS_BASE "59"

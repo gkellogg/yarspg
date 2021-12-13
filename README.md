@@ -110,9 +110,9 @@ alternatively
   * {YARSPG::Terminals}
 
 ## Dependencies
-* [Ruby](https://ruby-lang.org/) (>= 2.4)
-* [RDF.rb][] (~> 3.1)
-* [EBNF][] (~> 2.0)
+* [Ruby](https://ruby-lang.org/) (>= 2.6)
+* [RDF.rb][] (~> 3.2)
+* [EBNF][] (~> 2.2)
 
 ## Installation
 The recommended installation method is via [RubyGems](https://rubygems.org/).

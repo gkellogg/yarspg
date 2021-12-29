@@ -105,7 +105,7 @@ alternatively
 ### Principal Classes
 * {YARSPG}
   * {YARSPG::Format}
-  * {YARSPG::Metadata}
+  * {YARSPG::Meta}
   * {YARSPG::Reader}
   * {YARSPG::Terminals}
 

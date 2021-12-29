@@ -105,14 +105,14 @@ alternatively
 ### Principal Classes
 * {YARSPG}
   * {YARSPG::Format}
-  * {YARSPG::Metadata}
+  * {YARSPG::Meta}
   * {YARSPG::Reader}
   * {YARSPG::Terminals}
 
 ## Dependencies
-* [Ruby](https://ruby-lang.org/) (>= 2.4)
-* [RDF.rb][] (~> 3.1)
-* [EBNF][] (~> 2.0)
+* [Ruby](https://ruby-lang.org/) (>= 2.6)
+* [RDF.rb][] (~> 3.2)
+* [EBNF][] (~> 2.2)
 
 ## Installation
 The recommended installation method is via [RubyGems](https://rubygems.org/).
@@ -133,9 +133,13 @@ To install the latest official release of the `RDF::Tabular` gem, do:
   [tutorial][YARD-GS] or just look at the existing code for examples.
 * Don't touch the `rdf-tabular.gemspec`, `VERSION` or `AUTHORS` files. If you need to change them, do so on your private branch only.
 * Do feel free to add yourself to the `CREDITS` file and the corresponding list in the the `README`. Alphabetical order applies.
-* Do note that in order for us to merge any non-trivial changes (as a rule of thumb, additions larger than about 15 lines of code), we need an explicit [public domain dedication][PDD] on record from you.
+* Do note that in order for us to merge any non-trivial changes (as a rule
+  of thumb, additions larger than about 15 lines of code), we need an
+  explicit [public domain dedication][PDD] on record from you,
+  which you will be asked to agree to on the first commit to a repo within the organization.
+  Note that the agreement applies to all repos in the [Ruby RDF](https://github.com/ruby-rdf/) organization.
 
-##License
+## License
 
 This is free and unencumbered public domain software. For more information,
 see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
@@ -144,7 +148,7 @@ see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [RDF]:            https://www.w3.org/RDF/
 [YARD]:           https://yardoc.org/
 [YARD-GS]:        https://rubydoc.info/docs/yard/file/docs/GettingStarted.md
-[PDD]:            https://lists.w3.org/Archives/Public/public-rdf-ruby/2010May/0013.html
+[PDD]:              https://unlicense.org/#unlicensing-contributions
 [EBNF]:           https://rubygems.org/gems/ebnf
 [RDF.rb]:         https://rubygems.org/gems/rdf
 [RDF*]:           https://lists.w3.org/Archives/Public/public-rdf-star/

@@ -16,18 +16,18 @@ Gem::Specification.new do |gem|
   gem.require_paths      = %w(lib)
   gem.description        = %(YARSPG is an YARS-PG reader/writer for the RDF.rb library suite.)
 
-  gem.required_ruby_version      = '>= 2.4'
+  gem.required_ruby_version      = '>= 2.6'
   gem.requirements               = []
-  gem.add_runtime_dependency     'rdf',                   '~> 3.1'
-  gem.add_runtime_dependency     'ebnf',                  '~> 2.0'
-  gem.add_runtime_dependency     'json-canonicalization', '~> 0.2'
-  gem.add_runtime_dependency     'sxp',                   '~> 1.1'
-  gem.add_runtime_dependency     'rdf-xsd',               '~> 3.1'
+  gem.add_runtime_dependency     'rdf',                   '~> 3.2'
+  gem.add_runtime_dependency     'ebnf',                  '~> 2.2'
+  gem.add_runtime_dependency     'json-canonicalization', '~> 0.3'
+  gem.add_runtime_dependency     'sxp',                   '~> 1.2'
+  gem.add_runtime_dependency     'rdf-xsd',               '~> 3.2'
 
-  gem.add_development_dependency 'rdf-spec',              '~> 3.1'
-  gem.add_development_dependency 'rspec',                 '~> 3.9'
+  gem.add_development_dependency 'rdf-spec',              '~> 3.2'
+  gem.add_development_dependency 'rspec',                 '~> 3.10'
   gem.add_development_dependency 'rspec-its',             '~> 1.3'
-  gem.add_development_dependency 'yard' ,                 '~> 0.9.20'
+  gem.add_development_dependency 'yard' ,                 '~> 0.9'
 
   gem.post_install_message       = nil
 end

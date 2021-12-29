@@ -13,7 +13,7 @@
   doap:homepage      <https://gkellogg.github.com/yarspg> ;
   doap:license       <https://unlicense.org/1.0/> ;
   doap:shortdesc     "YARS-PG reader/writer for Ruby."@en ;
-  doap:description   "YARSPG is an YARS-PG reader/writer for the RDF.rb library suite."@en ;
+  doap:description   "YARSPG is a YARS-PG reader/writer for the Ruby RDF.rb library suite."@en ;
   doap:created       "2020-06-19"^^xsd:date ;
   doap:programming-language "Ruby" ;
   doap:implements    <https://lszeremeta.github.io/yarspg/> ;
@@ -27,8 +27,6 @@
   doap:maintainer    <https://greggkellogg.net/foaf#me> ;
   doap:documenter    <https://greggkellogg.net/foaf#me> ;
   foaf:maker         <https://greggkellogg.net/foaf#me> ;
-  dc:title           "YARSPG" ;
-  dc:description     "RDF::Turtle is an Turtle reader/writer for the RDF.rb library suite."@en ;
   dc:date            "2020-06-19"^^xsd:date ;
   dc:creator         <https://greggkellogg.net/foaf#me> ;
   dc:isPartOf        <https://rubygems.org/gems/rdf> .

@@ -15,6 +15,12 @@ Gem::Specification.new do |gem|
   gem.files              = %w(README.md UNLICENSE VERSION) + Dir.glob('lib/**/*.rb')
   gem.require_paths      = %w(lib)
   gem.description        = %(YARSPG is an YARS-PG reader/writer for the RDF.rb library suite.)
+  gem.metadata           = {
+    "documentation_uri" => "https://gkellogg.github.io/yarspg",
+    "bug_tracker_uri"   => "https://github.com/gkellogg/yarspg/issues",
+    "homepage_uri"      => "https://github.com/gkellogg/yarspg",
+    "source_code_uri"   => "https://github.com/gkellogg/yarspg",
+  }
 
   gem.required_ruby_version      = '>= 2.6'
   gem.requirements               = []

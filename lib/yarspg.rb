@@ -13,7 +13,7 @@ require 'rdf'
 #     end
 #   end
 #
-# @see https://rubydoc.info/github/ruby-rdf/rdf/
+# @see https://ruby-rdf.github.io/rdf/
 # @see https://lszeremeta.github.io/yarspg/index.html
 #
 # @author [Gregg Kellogg](https://greggkellogg.net/)

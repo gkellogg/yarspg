@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: YARSPG::Reader
+  
+    &mdash; YARS-PG reader/writer for RDF.rb
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "YARSPG::Reader";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (R)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../YARSPG.html" title="YARSPG (module)">YARSPG</a></span></span>
+     &raquo; 
+    <span class="title">Reader</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: YARSPG::Reader
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">RDF::Reader</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">RDF::Reader</li>
+          
+            <li class="next">YARSPG::Reader</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  <dl>
+      <dt>Includes:</dt>
+      <dd>EBNF::PEG::Parser, RDF::Util::Logger, <span class='object_link'><a href="Meta.html" title="YARSPG::Meta (module)">Meta</a></span>, <span class='object_link'><a href="Terminals.html" title="YARSPG::Terminals (module)">Terminals</a></span></dd>
+  </dl>
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/yarspg/reader.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>A parser for YARS-PG.</p>
+
+<p>Parses into RDF*, taking liberties with the meaning of a Property Graph.</p>
+
+<p>Issues:  * Is it an error to parse data outside of a declared section? (warning?)  * Node lables are treated like types  * Node properties are treated like statements on that node  * Node string annotations are treated like statements with the predicate created as a document fragment.  * Edge labels and Edge ids are ignored.  * The <code>graph_name</code> of each edge is used only for properties and annotations, the edges themselves are in the default graph (per RDF* semantics).  * Node and Edge schemas are ignored.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Reader/PartialStatement.html" title="YARSPG::Reader::PartialStatement (class)">PartialStatement</a></span>
+    
+  
+</p>
+
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="SECTION_ORDERS-constant" class="">SECTION_ORDERS =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='label'>METADATA:</span>       <span class='int'>0</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>NODE SCHEMAS</span><span class='label_end'>&quot;:</span> <span class='int'>1</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>EDGE SCHEMAS</span><span class='label_end'>&quot;:</span> <span class='int'>2</span><span class='comma'>,</span>
+  <span class='label'>NODES:</span>          <span class='int'>3</span><span class='comma'>,</span>
+  <span class='label'>EDGES:</span>          <span class='int'>4</span>
+<span class='rbrace'>}</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+  
+  
+  <h3 class="inherited">Constants included
+     from <span class='object_link'><a href="Terminals.html" title="YARSPG::Terminals (module)">Terminals</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Terminals.html#ALNUM_PLUS-constant" title="YARSPG::Terminals::ALNUM_PLUS (constant)">Terminals::ALNUM_PLUS</a></span>, <span class='object_link'><a href="Terminals.html#BOOL-constant" title="YARSPG::Terminals::BOOL (constant)">Terminals::BOOL</a></span>, <span class='object_link'><a href="Terminals.html#COMMENT-constant" title="YARSPG::Terminals::COMMENT (constant)">Terminals::COMMENT</a></span>, <span class='object_link'><a href="Terminals.html#DATE-constant" title="YARSPG::Terminals::DATE (constant)">Terminals::DATE</a></span>, <span class='object_link'><a href="Terminals.html#DATETIME-constant" title="YARSPG::Terminals::DATETIME (constant)">Terminals::DATETIME</a></span>, <span class='object_link'><a href="Terminals.html#HEX-constant" title="YARSPG::Terminals::HEX (constant)">Terminals::HEX</a></span>, <span class='object_link'><a href="Terminals.html#IRI-constant" title="YARSPG::Terminals::IRI (constant)">Terminals::IRI</a></span>, <span class='object_link'><a href="Terminals.html#IRI_RANGE-constant" title="YARSPG::Terminals::IRI_RANGE (constant)">Terminals::IRI_RANGE</a></span>, <span class='object_link'><a href="Terminals.html#NUMBER-constant" title="YARSPG::Terminals::NUMBER (constant)">Terminals::NUMBER</a></span>, <span class='object_link'><a href="Terminals.html#PN_CHARS-constant" title="YARSPG::Terminals::PN_CHARS (constant)">Terminals::PN_CHARS</a></span>, <span class='object_link'><a href="Terminals.html#PN_CHARS_BASE-constant" title="YARSPG::Terminals::PN_CHARS_BASE (constant)">Terminals::PN_CHARS_BASE</a></span>, <span class='object_link'><a href="Terminals.html#PN_CHARS_U-constant" title="YARSPG::Terminals::PN_CHARS_U (constant)">Terminals::PN_CHARS_U</a></span>, <span class='object_link'><a href="Terminals.html#SIGN-constant" title="YARSPG::Terminals::SIGN (constant)">Terminals::SIGN</a></span>, <span class='object_link'><a href="Terminals.html#STRING-constant" title="YARSPG::Terminals::STRING (constant)">Terminals::STRING</a></span>, <span class='object_link'><a href="Terminals.html#STRING_LITERAL_QUOTE-constant" title="YARSPG::Terminals::STRING_LITERAL_QUOTE (constant)">Terminals::STRING_LITERAL_QUOTE</a></span>, <span class='object_link'><a href="Terminals.html#TIME-constant" title="YARSPG::Terminals::TIME (constant)">Terminals::TIME</a></span>, <span class='object_link'><a href="Terminals.html#TIMEZONE-constant" title="YARSPG::Terminals::TIMEZONE (constant)">Terminals::TIMEZONE</a></span>, <span class='object_link'><a href="Terminals.html#UCHAR-constant" title="YARSPG::Terminals::UCHAR (constant)">Terminals::UCHAR</a></span>, <span class='object_link'><a href="Terminals.html#U_CHARS1-constant" title="YARSPG::Terminals::U_CHARS1 (constant)">Terminals::U_CHARS1</a></span>, <span class='object_link'><a href="Terminals.html#U_CHARS2-constant" title="YARSPG::Terminals::U_CHARS2 (constant)">Terminals::U_CHARS2</a></span>, <span class='object_link'><a href="Terminals.html#WS-constant" title="YARSPG::Terminals::WS (constant)">Terminals::WS</a></span></p>
+
+  
+  
+  <h3 class="inherited">Constants included
+     from <span class='object_link'><a href="Meta.html" title="YARSPG::Meta (module)">Meta</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Meta.html#RULES-constant" title="YARSPG::Meta::RULES (constant)">Meta::RULES</a></span></p>
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#each_statement-instance_method" title="#each_statement (instance method)">#<strong>each_statement</strong> {|statement| ... } </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Iterates the given block for each RDF statement in the input.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#each_triple-instance_method" title="#each_triple (instance method)">#<strong>each_triple</strong> {|subject, predicate, object| ... } </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Iterates the given block for each RDF triple in the input.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#emit_statements-instance_method" title="#emit_statements (instance method)">#<strong>emit_statements</strong>(subject, partials, graph_name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Emit statements, accounting for lists.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(input = nil, **options, &amp;block)  &#x21d2; YARSPG::Reader </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Initializes a new reader instance.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#inspect-instance_method" title="#inspect (instance method)">#<strong>inspect</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>(input = nil, **options, &amp;block)  &#x21d2; <tt><span class='object_link'><a href="" title="YARSPG::Reader (class)">YARSPG::Reader</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Initializes a new reader instance.</p>
+
+<p>This assumes that strings are interpreted as document-relative fragments.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>input</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>#to_s</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash{Symbol =&gt; Object}</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>**options</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:prefixes</span>
+          <span class="type">(<tt>Hash</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>Hash.new</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>the prefix mappings to use (for acessing intermediate parser productions)</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:base_uri</span>
+          <span class="type">(<tt>#to_s</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>the base URI to use when resolving relative URIs (for acessing intermediate parser productions)</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:validate</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>false</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>whether to validate the parsed statements and values. If not validating, the parser will attempt to recover from errors.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:logger</span>
+          <span class="type">(<tt>Logger</tt>, <tt>#write</tt>, <tt>#&lt;&lt;</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Record error/info/debug output</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+    
+    
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/yarspg/reader.rb', line 331</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_input'>input</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='op'>**</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>super</span> <span class='kw'>do</span>
+    <span class='ivar'>@options</span><span class='lbracket'>[</span><span class='symbol'>:base_uri</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>RDF</span><span class='op'>::</span><span class='const'>URI</span><span class='lparen'>(</span><span class='id identifier rubyid_base_uri'>base_uri</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='ivar'>@options</span><span class='lbracket'>[</span><span class='symbol'>:logger</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span> <span class='kw'>unless</span> <span class='ivar'>@options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:logger</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_log_debug'>log_debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>base IRI</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='lbrace'>{</span><span class='id identifier rubyid_base_uri'>base_uri</span><span class='period'>.</span><span class='id identifier rubyid_inspect'>inspect</span><span class='rbrace'>}</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+      <span class='kw'>case</span> <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_arity'>arity</span>
+        <span class='kw'>when</span> <span class='int'>0</span> <span class='kw'>then</span> <span class='id identifier rubyid_instance_eval'>instance_eval</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+        <span class='kw'>else</span> <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="each_statement-instance_method">
+  
+    #<strong>each_statement</strong> {|statement| ... } 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>Iterates the given block for each RDF statement in the input.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>statement</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>statement</span>
+      
+      
+        <span class='type'>(<tt>RDF::Statement</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/yarspg/reader.rb', line 356</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_each_statement'>each_statement</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='id identifier rubyid_log_recover'>log_recover</span>
+    <span class='ivar'>@callback</span> <span class='op'>=</span> <span class='id identifier rubyid_block'>block</span>
+
+    <span class='kw'>begin</span>
+      <span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='ivar'>@input</span><span class='comma'>,</span> <span class='symbol'>:yarspg</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../YARSPG.html" title="YARSPG (module)">YARSPG</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Meta.html" title="YARSPG::Meta (module)">Meta</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Meta.html#RULES-constant" title="YARSPG::Meta::RULES (constant)">RULES</a></span></span><span class='comma'>,</span> <span class='op'>**</span><span class='ivar'>@options</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_context'>context</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_data'>data</span><span class='op'>|</span>
+        <span class='kw'>case</span> <span class='id identifier rubyid_context'>context</span>
+        <span class='kw'>when</span> <span class='symbol'>:base_uri</span>
+          <span class='ivar'>@options</span><span class='lbracket'>[</span><span class='symbol'>:base_uri</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
+        <span class='kw'>when</span> <span class='symbol'>:statement</span>
+          <span class='id identifier rubyid_loc'>loc</span> <span class='op'>=</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>
+          <span class='ivar'>@callback</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='const'>RDF</span><span class='op'>::</span><span class='const'>Statement</span><span class='period'>.</span><span class='id identifier rubyid_from'>from</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='kw'>rescue</span> <span class='const'>EBNF</span><span class='op'>::</span><span class='const'>PEG</span><span class='op'>::</span><span class='const'>Parser</span><span class='op'>::</span><span class='const'>Error</span>
+      <span class='comment'># Terminate loop if Errors found while parsing
+</span>    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_validate?'>validate?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_log_statistics'>log_statistics</span><span class='lbracket'>[</span><span class='symbol'>:error</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_raise'>raise</span> <span class='const'>RDF</span><span class='op'>::</span><span class='const'>ReaderError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Errors found during processing</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_enum_for'>enum_for</span><span class='lparen'>(</span><span class='symbol'>:each_statement</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="each_triple-instance_method">
+  
+    #<strong>each_triple</strong> {|subject, predicate, object| ... } 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>Iterates the given block for each RDF triple in the input.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>subject</tt>, <tt>predicate</tt>, <tt>object</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>subject</span>
+      
+      
+        <span class='type'>(<tt>RDF::Resource</tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>predicate</span>
+      
+      
+        <span class='type'>(<tt>RDF::URI</tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>object</span>
+      
+      
+        <span class='type'>(<tt>RDF::Value</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+390
+391
+392
+393
+394
+395
+396
+397</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/yarspg/reader.rb', line 390</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_each_triple'>each_triple</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='id identifier rubyid_each_statement'>each_statement</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_statement'>statement</span><span class='op'>|</span>
+      <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_statement'>statement</span><span class='period'>.</span><span class='id identifier rubyid_to_triple'>to_triple</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_enum_for'>enum_for</span><span class='lparen'>(</span><span class='symbol'>:each_triple</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="emit_statements-instance_method">
+  
+    #<strong>emit_statements</strong>(subject, partials, graph_name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Emit statements, accounting for lists</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/yarspg/reader.rb', line 400</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_emit_statements'>emit_statements</span><span class='lparen'>(</span><span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span> <span class='id identifier rubyid_partials'>partials</span><span class='comma'>,</span> <span class='id identifier rubyid_graph_name'>graph_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_partials'>partials</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_partial'>partial</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_partial'>partial</span><span class='period'>.</span><span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_list?'>list?</span>
+      <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span> <span class='id identifier rubyid_partial'>partial</span><span class='period'>.</span><span class='id identifier rubyid_predicate'>predicate</span><span class='comma'>,</span> <span class='id identifier rubyid_partial'>partial</span><span class='period'>.</span><span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span> <span class='id identifier rubyid_graph_name'>graph_name</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_partial'>partial</span><span class='period'>.</span><span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_each_statement'>each_statement</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_st'>st</span><span class='op'>|</span>
+        <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_st'>st</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span> <span class='id identifier rubyid_st'>st</span><span class='period'>.</span><span class='id identifier rubyid_predicate'>predicate</span><span class='comma'>,</span> <span class='id identifier rubyid_st'>st</span><span class='period'>.</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_graph_name'>graph_name</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span> <span class='id identifier rubyid_partial'>partial</span><span class='period'>.</span><span class='id identifier rubyid_predicate'>predicate</span><span class='comma'>,</span> <span class='id identifier rubyid_partial'>partial</span><span class='period'>.</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_graph_name'>graph_name</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="inspect-instance_method">
+  
+    #<strong>inspect</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+346
+347
+348</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/yarspg/reader.rb', line 346</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
+  <span class='id identifier rubyid_sprintf'>sprintf</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>#&lt;%s:%#0x(%s)&gt;</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid___id__'>__id__</span><span class='comma'>,</span> <span class='id identifier rubyid_base_uri'>base_uri</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Sat Jan 29 00:12:39 2022 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.27 (ruby-3.1.0).
+</div>
+
+    </div>
+  </body>
+</html>

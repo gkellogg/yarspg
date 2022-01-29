@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: YARSPG::Terminals
+  
+    &mdash; YARS-PG reader/writer for RDF.rb
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "YARSPG::Terminals";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (T)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../YARSPG.html" title="YARSPG (module)">YARSPG</a></span></span>
+     &raquo; 
+    <span class="title">Terminals</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: YARSPG::Terminals
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <dl>
+    <dt>Included in:</dt>
+    <dd><span class='object_link'><a href="Reader.html" title="YARSPG::Reader (class)">Reader</a></span></dd>
+  </dl>
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/yarspg/terminals.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Terminal definitions for EBNF Parser</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="U_CHARS1-constant" class="">U_CHARS1 =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_compile'>compile</span><span class='lparen'>(</span><span class='heredoc_beg'>&lt;&lt;-EOS</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\s+</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='tstring_content'>  [\\u00C0-\\u00D6]|[\\u00D8-\\u00F6]|[\\u00F8-\\u02FF]|
+  [\\u0370-\\u037D]|[\\u037F-\\u1FFF]|[\\u200C-\\u200D]|
+  [\\u2070-\\u218F]|[\\u2C00-\\u2FEF]|[\\u3001-\\uD7FF]|
+  [\\uF900-\\uFDCF]|[\\uFDF0-\\uFFFD]|[\\u{10000}-\\u{EFFFF}]
+</span><span class='heredoc_end'>EOS</span></pre></dd>
+      
+        <dt id="U_CHARS2-constant" class="">U_CHARS2 =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_compile'>compile</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\\u00B7|[\\u0300-\\u036F]|[\\u203F-\\u2040]</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='const'>Regexp</span><span class='op'>::</span><span class='const'>FIXEDENCODING</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="IRI_RANGE-constant" class="">IRI_RANGE =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_compile'>compile</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[[^&lt;&gt;\&quot;{}|^`\\\\]&amp;&amp;[^\\x00-\\x20]]</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='const'>Regexp</span><span class='op'>::</span><span class='const'>FIXEDENCODING</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="UCHAR-constant" class="">UCHAR =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>EBNF</span><span class='op'>::</span><span class='const'>LL1</span><span class='op'>::</span><span class='const'>Lexer</span><span class='op'>::</span><span class='const'>UCHAR</span></pre></dd>
+      
+        <dt id="STRING_LITERAL_QUOTE-constant" class="">STRING_LITERAL_QUOTE =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>&quot;([^\&quot;\\\n\r]|</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#UCHAR-constant" title="YARSPG::Terminals::UCHAR (constant)">UCHAR</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)*&quot;</span><span class='regexp_end'>/</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="SIGN-constant" class="">SIGN =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>[\+\-]</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="PN_CHARS_BASE-constant" class="">PN_CHARS_BASE =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>[A-Z]|[a-z]|[0-9]|</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#U_CHARS1-constant" title="YARSPG::Terminals::U_CHARS1 (constant)">U_CHARS1</a></span></span><span class='embexpr_end'>}</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="PN_CHARS_U-constant" class="">PN_CHARS_U =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>_|(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PN_CHARS_BASE-constant" title="YARSPG::Terminals::PN_CHARS_BASE (constant)">PN_CHARS_BASE</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="PN_CHARS-constant" class="">PN_CHARS =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>-|[0-9]|(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PN_CHARS_U-constant" title="YARSPG::Terminals::PN_CHARS_U (constant)">PN_CHARS_U</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)|</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#U_CHARS2-constant" title="YARSPG::Terminals::U_CHARS2 (constant)">U_CHARS2</a></span></span><span class='embexpr_end'>}</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="STRING-constant" class="">STRING =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#STRING_LITERAL_QUOTE-constant" title="YARSPG::Terminals::STRING_LITERAL_QUOTE (constant)">STRING_LITERAL_QUOTE</a></span></span><span class='embexpr_end'>}</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="NUMBER-constant" class="">NUMBER =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#SIGN-constant" title="YARSPG::Terminals::SIGN (constant)">SIGN</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)?\d+(\.\d*)?</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="BOOL-constant" class="">BOOL =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>true|false</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="ALNUM_PLUS-constant" class="">ALNUM_PLUS =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PN_CHARS_BASE-constant" title="YARSPG::Terminals::PN_CHARS_BASE (constant)">PN_CHARS_BASE</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)(?:(?:(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PN_CHARS-constant" title="YARSPG::Terminals::PN_CHARS (constant)">PN_CHARS</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)|\.)*(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PN_CHARS-constant" title="YARSPG::Terminals::PN_CHARS (constant)">PN_CHARS</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>))?</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="IRI-constant" class="">IRI =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>prob with grammar</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>&lt;(?:(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#IRI_RANGE-constant" title="YARSPG::Terminals::IRI_RANGE (constant)">IRI_RANGE</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)|(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#UCHAR-constant" title="YARSPG::Terminals::UCHAR (constant)">UCHAR</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>))*&gt;</span><span class='regexp_end'>/u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="DATE-constant" class="">DATE =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>\d\d\d\d-\d\d-\d\d</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="TIMEZONE-constant" class="">TIMEZONE =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#SIGN-constant" title="YARSPG::Terminals::SIGN (constant)">SIGN</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)?\d\d:\d\d</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="TIME-constant" class="">TIME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>\d\d:\d\d:\d\d(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#TIMEZONE-constant" title="YARSPG::Terminals::TIMEZONE (constant)">TIMEZONE</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)?</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="DATETIME-constant" class="">DATETIME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#DATE-constant" title="YARSPG::Terminals::DATE (constant)">DATE</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)T(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#TIME-constant" title="YARSPG::Terminals::TIME (constant)">TIME</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>)</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="HEX-constant" class="">HEX =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>%r(</span><span class='tstring_content'>\#x[0-9a-fA-F]+</span><span class='regexp_end'>)u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="COMMENT-constant" class="">COMMENT =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(?:#[^\n\r\r]*)</span><span class='regexp_end'>/u</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="WS-constant" class="">WS =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(?:\s|(?:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#COMMENT-constant" title="YARSPG::Terminals::COMMENT (constant)">COMMENT</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>))+</span><span class='regexp_end'>/m</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+
+
+</div>
+
+      <div id="footer">
+  Generated on Sat Jan 29 00:12:38 2022 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.27 (ruby-3.1.0).
+</div>
+
+    </div>
+  </body>
+</html>

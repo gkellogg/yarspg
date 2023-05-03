@@ -2,8 +2,8 @@
 
 [YARS-PG][] reader for [RDF.rb][]. Reads [Property Graph][] descriptions and generates [RDF*][] datasets.
 
-[![Gem Version](https://badge.fury.io/rb/yarspg.png)](https://badge.fury.io/rb/yarspg)
-[![Build Status](https://secure.travis-ci.org/gkellogg/yarspg.png?branch=master)](https://travis-ci.org/gkellogg/yarspg)
+[![Gem Version](https://badge.fury.io/rb/yarspg.svg)](https://badge.fury.io/rb/yarspg)
+[![Build Status](https://github.com/gkellogg/yarspg/actions/workflows/ci.yml/badge.svg?branch=master)](https://travis-ci.org/gkellogg/yarspg)
 [![Coverage Status](https://coveralls.io/repos/gkellogg/yarspg/badge.svg)](https://coveralls.io/r/gkellogg/yarspg)
 
 ## Features
